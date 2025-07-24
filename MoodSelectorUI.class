@@ -1,0 +1,79 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+package com.moodifyx;
+
+import java.awt.Component;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+public class MoodSelectorUI extends JFrame {
+   private final MoodRepository repository = new MoodRepository();
+
+   public MoodSelectorUI() {
+      this.setTitle("MoodifyX Music Selector");
+      this.setSize(400, 300);
+      this.setDefaultCloseOperation(3);
+      this.setLocationRelativeTo((Component)null);
+      this.setResizable(false);
+      this.setLayout(new BoxLayout(this.getContentPane(), 1));
+      this.setupUI();
+      this.setVisible(true);
+   }
+
+   private void setupUI() {
+      MoodRepository var1 = new MoodRepository();
+      Set var2 = var1.getAllMoods();
+      JComboBox var3 = new JComboBox((String[])var2.toArray((var0) -> {
+         return new String[var0];
+      }));
+      JButton var4 = new JButton("Recommend Music");
+      this.add(var3);
+      this.add(var4);
+      this.setLayout(new BoxLayout(this.getContentPane(), 1));
+      this.setTitle("Mood-Based Music Selector");
+      this.setDefaultCloseOperation(3);
+      this.pack();
+      this.setVisible(true);
+      var4.addActionListener((var3x) -> {
+         String var4 = (String)var3.getSelectedItem();
+
+         while(true) {
+            while(true) {
+               List var5 = this.repository.getSongsByMood(var4);
+               Song var6 = (Song)var5.get(ThreadLocalRandom.current().nextInt(var5.size()));
+               SongPlayer.play(var6.getFilePath());
+               Object[] var7 = new Object[]{"Another Song", "Change Mood", "Stop Music and Exit"};
+               int var8 = JOptionPane.showOptionDialog(this, "Now Playing: " + var6.getTitle() + "\nMood: " + var4, "Your Mood Music", 1, 3, (Icon)null, var7, var7[0]);
+               SongPlayer.stop();
+               switch (var8) {
+                  case 0:
+                     break;
+                  case 1:
+                     String var9 = (String)JOptionPane.showInputDialog(this, "Select a new mood:", "Change Mood", -1, (Icon)null, var2.toArray(), var2.iterator().next());
+                     if (var9 != null && !var9.isEmpty()) {
+                        var3.setSelectedItem(var9);
+                        var4 = var9;
+                     }
+                     break;
+                  default:
+                     SongPlayer.stop();
+                     System.exit(0);
+               }
+            }
+         }
+      });
+      JPanel var5 = new JPanel();
+      var5.add(new JLabel("Select Your Mood:"));
+      var5.add(var3);
+      var5.add(var4);
+      this.add(var5);
+   }
+}

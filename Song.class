@@ -1,0 +1,24 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+package com.moodifyx;
+
+public class Song {
+   private final String title;
+   private final String filePath;
+
+   public Song(String var1, String var2) {
+      this.title = var1;
+      this.filePath = var2;
+   }
+
+   public String getTitle() {
+      return this.title;
+   }
+
+   public String getFilePath() {
+      return this.filePath;
+   }
+
+   public String toString() {
+      return this.title;
+   }
+}
